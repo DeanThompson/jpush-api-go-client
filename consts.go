@@ -3,6 +3,7 @@ package jpush
 import "errors"
 
 const (
+	// all audiences, all platforms
 	ALL = "all"
 
 	PLATFORM_IOS     = "ios"
@@ -26,5 +27,5 @@ var (
 	ErrInvalidPlatform         = errors.New("<Platform>: invalid platform")
 	ErrMessageContentMissing   = errors.New("<Message>: msg_content is required.")
 	ErrContentMissing          = errors.New("<PushObject>: notification or message is required")
-	ErrIosNotificationTooLarge = errors.New("<IosNotification>iOS notification too large")
+	ErrIosNotificationTooLarge = errors.New("<IosNotification>: iOS notification too large")
 )

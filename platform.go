@@ -1,13 +1,5 @@
 package jpush
 
-func isValidPlatform(platform string) bool {
-	switch platform {
-	case ALL, PLATFORM_IOS, PLATFORM_ANDROID, PLATFORM_WP:
-		return true
-	}
-	return false
-}
-
 type Platform struct {
 	value []string
 }
@@ -50,6 +42,14 @@ func (p *Platform) Has(platform string) bool {
 		if v == ALL || v == platform {
 			return true
 		}
+	}
+	return false
+}
+
+func isValidPlatform(platform string) bool {
+	switch platform {
+	case ALL, PLATFORM_IOS, PLATFORM_ANDROID, PLATFORM_WP:
+		return true
 	}
 	return false
 }
