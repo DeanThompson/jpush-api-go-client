@@ -1,8 +1,10 @@
 package httplib
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
-	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"net/url"
@@ -24,11 +26,12 @@ type HTTPClient struct {
 	debug     bool
 }
 
-func New() *HTTPClient {
+func NewClient() *HTTPClient {
 	c := &HTTPClient{
 		client:    &http.Client{},
 		transport: &http.Transport{MaxIdleConnsPerHost: 10},
 	}
+	c.SetTimeout(10*time.Second, 10*time.Second)
 	c.client.Transport = c.transport
 	return c
 }
@@ -55,7 +58,7 @@ func (c *HTTPClient) SetTimeout(connTimeout, rwTimeout time.Duration) *HTTPClien
 	return c
 }
 
-func (c *HTTPClient) do(method string, url string, headers map[string]string, body io.Reader) ([]byte, error) {
+func (c *HTTPClient) do(method string, url string, headers map[string]string, body io.Reader) (*http.Response, error) {
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
@@ -67,22 +70,43 @@ func (c *HTTPClient) do(method string, url string, headers map[string]string, bo
 		}
 	}
 
-	resp, err := c.client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	ret, err := ioutil.ReadAll(resp.Body)
-	defer resp.Body.Close()
-	if err != nil {
-		return nil, err
-	}
-	return ret, nil
+	return c.client.Do(req)
 }
 
-//func (c *HTTPClient) Get(url string, params map[string]interface{}, headers map[string]string) ([]byte, error) {
-//
-//}
+func (c *HTTPClient) Get(url string, params map[string]interface{}, headers map[string]string) (*http.Response, error) {
+	c.log(GET, url, params, headers)
+
+	return c.do(GET, formatUrl(url, params), headers, nil)
+}
+
+func (c *HTTPClient) Post(url string, bodyType string, body io.Reader, headers map[string]string) (*http.Response, error) {
+	headers["Content-Type"] = bodyType
+	return c.do(POST, url, headers, body)
+}
+
+func (c *HTTPClient) PostForm(url string, data map[string]interface{}, headers map[string]string) (*http.Response, error) {
+	c.log(POST, url, data, headers)
+
+	body := strings.NewReader(mapToURLValues(data).Encode())
+	return c.Post(url, "application/x-www-form-urlencoded", body, headers)
+}
+
+func (c *HTTPClient) PostJson(url string, data interface{}, headers map[string]string) (*http.Response, error) {
+	payload, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	c.log(POST, url, string(payload), headers)
+
+	return c.Post(url, "application/json", bytes.NewReader(payload), headers)
+}
+
+func (c *HTTPClient) log(v ...interface{}) {
+	if c.debug {
+		log.Println("[HTTPClient]", v...)
+	}
+}
 
 func valueToString(data interface{}) string {
 	value := reflect.ValueOf(data)
