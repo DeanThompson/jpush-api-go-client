@@ -2,6 +2,7 @@ package jpush
 
 import (
 	"fmt"
+
 	"github.com/DeanThompson/jpush-api-go-client/common"
 	"github.com/DeanThompson/jpush-api-go-client/device"
 	"github.com/DeanThompson/jpush-api-go-client/httplib"

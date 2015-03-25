@@ -8,11 +8,11 @@ import (
 )
 
 func main() {
-    const (
-        appKey       = "8b7127870ccae51a2c2e6da4"
-        masterSecret = "55df2bc707d65fb39ca01325"
-    )
-    
+	const (
+		appKey       = "8b7127870ccae51a2c2e6da4"
+		masterSecret = "55df2bc707d65fb39ca01325"
+	)
+
 	// 创建 JPush 的客户端
 	jclient := jpush.NewJPushClient(appKey, masterSecret)
 	jclient.SetDebug(true)
