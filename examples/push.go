@@ -9,13 +9,13 @@ import (
 	"github.com/DeanThompson/jpush-api-go-client/push"
 )
 
-const (
-	appKey       = "8b7127870ccae51a2c2e6da4"
-	masterSecret = "55df2bc707d65fb39ca01325"
-)
-
 func main() {
-	// platform 对象
+    const (
+        appKey       = "8b7127870ccae51a2c2e6da4"
+        masterSecret = "55df2bc707d65fb39ca01325"
+    )
+
+    // platform 对象
 	platform := push.NewPlatform()
 	// 用 Add() 方法添加具体平台参数，可选: "all", "ios", "android"
 	platform.Add("ios", "android")
