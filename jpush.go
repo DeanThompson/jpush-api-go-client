@@ -1,7 +1,9 @@
 package jpush
 
 import (
+	"fmt"
 	"github.com/DeanThompson/jpush-api-go-client/common"
+	"github.com/DeanThompson/jpush-api-go-client/device"
 	"github.com/DeanThompson/jpush-api-go-client/httplib"
 	"github.com/DeanThompson/jpush-api-go-client/push"
 )
@@ -58,4 +60,32 @@ func (jpc *JPushClient) doPush(url string, payload *push.PushObject) (*push.Push
 		return nil, err
 	}
 	return result, nil
+}
+
+// 查询设备(设备的别名与标签)
+func (jpc *JPushClient) QueryDevice(registrationId string) (*device.DeviceInfoResult, error) {
+	url := fmt.Sprintf(common.DEVICE_URL, registrationId)
+	resp, err := jpc.http.Get(url, nil, jpc.headers)
+	if err != nil {
+		return nil, err
+	}
+
+	result := &device.DeviceInfoResult{}
+	err = result.FromResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// 更新设备 （设置的别名与标签）
+func (jpc *JPushClient) UpdateDevice(registrationId string, payload *device.DeviceUpdate) (*common.ResponseBase, error) {
+	url := fmt.Sprintf(common.DEVICE_URL, registrationId)
+	resp, err := jpc.http.PostJson(url, payload, jpc.headers)
+	if err != nil {
+		return nil, err
+	}
+
+	result := common.NewResponseBase(resp)
+	return &result, nil
 }

@@ -2,6 +2,8 @@ package common
 
 import (
 	"encoding/base64"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"sort"
 	"strconv"
@@ -10,6 +12,16 @@ import (
 func BasicAuth(username, password string) string {
 	auth := username + ":" + password
 	return base64.StdEncoding.EncodeToString([]byte(auth))
+}
+
+func RespToJson(resp *http.Response, dest interface{}) error {
+	body, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	if err != nil {
+		return err
+	}
+
+	return json.Unmarshal(body, &dest)
 }
 
 func GetIntHeader(resp *http.Response, key string) (int, error) {

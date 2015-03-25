@@ -3,7 +3,6 @@ package push
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/DeanThompson/jpush-api-go-client/common"
@@ -66,30 +65,13 @@ type pushObjectWrapper struct {
 	Options      *Options      `json:"options,omitempty"`
 }
 
-type PushError struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-}
-
-func (pe *PushError) String() string {
-	return fmt.Sprintf("{code: %d, message: %s}", pe.Code, pe.Message)
-}
-
 type PushResult struct {
-	// HTTP 状态码
-	StatusCode int
-
-	// 频率限制相关
-	RateLimitQuota     int
-	RateLimitRemaining int
-	RateLimitReset     int
+	common.ResponseBase
 
 	// 成功时 msg_id 是 string 类型。。。
 	// 失败时 msg_id 是 int 类型。。。
 	MsgId  interface{} `json:"msg_id"`
 	SendNo string      `json:"sendno"`
-
-	Error *PushError `json:"error"`
 }
 
 // 成功： {"sendno":"18", "msg_id":"1828256757"}
@@ -101,26 +83,15 @@ type PushResult struct {
 // X-Rate-Limit-Remaining：当前时间窗口剩余的可用次数
 // X-Rate-Limit-Reset：    距离时间窗口重置剩余的秒数
 func (pr *PushResult) FromResponse(resp *http.Response) error {
-	data, err := ioutil.ReadAll(resp.Body)
-	defer resp.Body.Close()
-	if err != nil {
-		return err
-	}
-
-	fmt.Println("\nresponse: ", string(data), "\n")
-
 	// 成功或失败时解析出返回的数据
 	// 实际上只有当 StatusCode = 200 时，才有 msg_id 和 sendno
 	// 其他情况下只有 error 数据。 error 和 (msg_id, sendno) 不会同时存在
-	err = json.Unmarshal(data, &pr)
+	err := common.RespToJson(resp, &pr)
 	if err != nil {
 		return err
 	}
 
-	pr.StatusCode = resp.StatusCode
-	pr.RateLimitQuota, _ = common.GetIntHeader(resp, rateLimitQuotaHeader)
-	pr.RateLimitRemaining, _ = common.GetIntHeader(resp, rateLimitRemainingHeader)
-	pr.RateLimitReset, _ = common.GetIntHeader(resp, rateLimitResetHeader)
+	pr.ResponseBase = common.NewResponseBase(resp)
 
 	return nil
 }
@@ -152,8 +123,6 @@ func (pr *PushResult) ErrorMsg() string {
 }
 
 func (pr *PushResult) String() string {
-	f := "<PushResult> StatusCode: %d, msg_id: %v, sendno: %s, error: %v, " +
-		" rateLimitQuota: %d, rateLimitRemaining: %d, rateLimitReset: %d"
-	return fmt.Sprintf(f, pr.StatusCode, pr.MsgId, pr.SendNo, pr.Error,
-		pr.RateLimitQuota, pr.RateLimitRemaining, pr.RateLimitReset)
+	f := "<PushResult> msg_id: %v, sendno: %s, %s"
+	return fmt.Sprintf(f, pr.MsgId, pr.SendNo, pr.ResponseBase.String())
 }
