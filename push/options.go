@@ -1,4 +1,6 @@
-package jpush
+package push
+
+import "github.com/DeanThompson/jpush-api-go-client/common"
 
 // 推送可选项。
 type Options struct {
@@ -13,11 +15,11 @@ type Options struct {
 // 只是针对某些值做一下范围限制
 func (self *Options) Validate() error {
 	if self.TimeToLive > 0 {
-		self.TimeToLive = maxInt(self.TimeToLive, MaxTimeToLive)
+		self.TimeToLive = common.MaxInt(self.TimeToLive, MaxTimeToLive)
 	}
 
 	if self.BigPushDuration > 0 {
-		self.BigPushDuration = maxInt(self.BigPushDuration, MaxBigPushDuration)
+		self.BigPushDuration = common.MaxInt(self.BigPushDuration, MaxBigPushDuration)
 	}
 	return nil
 }

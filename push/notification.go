@@ -1,6 +1,10 @@
-package jpush
+package push
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/DeanThompson/jpush-api-go-client/common"
+)
 
 // “通知”对象，是一条推送的实体内容对象之一（另一个是“消息”）
 type Notification struct {
@@ -58,7 +62,7 @@ func (in *IosNotification) Validate() error {
 	}
 
 	if len("iOS:{}")+len(string(data)) >= IosNotificationMaxSize {
-		return ErrIosNotificationTooLarge
+		return common.ErrIosNotificationTooLarge
 	}
 
 	return nil

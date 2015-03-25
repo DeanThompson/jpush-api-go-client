@@ -1,31 +1,29 @@
-package jpush
+package push
 
 import (
+	"github.com/DeanThompson/jpush-api-go-client/common"
 	"github.com/DeanThompson/jpush-api-go-client/httplib"
+	"github.com/DeanThompson/jpush-api-go-client/push"
 )
-
-type Validator interface {
-	Validate() error
-}
 
 // JPush 的 Golang 推送客户端
 // 详情： http://docs.jpush.io/server/rest_api_v3_push/
-type PushClient struct {
+type JPushClient struct {
 	appKey       string
 	masterSecret string
 	headers      map[string]string
 	http         *httplib.HTTPClient
 }
 
-func NewPushClient(appKey string, masterSecret string) *PushClient {
-	client := PushClient{
+func NewPushClient(appKey string, masterSecret string) *JPushClient {
+	client := JPushClient{
 		appKey:       appKey,
 		masterSecret: masterSecret,
 	}
 	headers := make(map[string]string)
 	headers["User-Agent"] = "jpush-api-go-client"
 	headers["Connection"] = "keep-alive"
-	headers["Authorization"] = "Basic " + basicAuth(appKey, masterSecret)
+	headers["Authorization"] = "Basic " + common.BasicAuth(appKey, masterSecret)
 	client.headers = headers
 
 	client.http = httplib.NewClient()
@@ -34,22 +32,22 @@ func NewPushClient(appKey string, masterSecret string) *PushClient {
 }
 
 // 推送 API
-func (pc *PushClient) Push(payload *PushObject) (*PushResult, error) {
-	return pc.doPush(PUSH_URL, payload)
+func (jpc *JPushClient) Push(payload *push.PushObject) (*push.PushResult, error) {
+	return jpc.doPush(common.PUSH_URL, payload)
 }
 
 // 推送校验 API
-func (pc *PushClient) PushValidate(payload *PushObject) (*PushResult, error) {
-	return pc.doPush(PUSH_VALIDATE_URL, payload)
+func (jpc *JPushClient) PushValidate(payload *push.PushObject) (*push.PushResult, error) {
+	return jpc.doPush(common.PUSH_VALIDATE_URL, payload)
 }
 
-func (pc *PushClient) doPush(url string, payload *PushClient) (*PushResult, error) {
-	resp, err := pc.http.PostJson(url, payload, pc.headers)
+func (jpc *JPushClient) doPush(url string, payload *JPushClient) (*push.PushResult, error) {
+	resp, err := jpc.http.PostJson(url, payload, jpc.headers)
 	if err != nil {
 		return nil, err
 	}
 
-	result := &PushResult{}
+	result := &push.PushResult{}
 	err = result.FromResponse(resp)
 	if err != nil {
 		return nil, err

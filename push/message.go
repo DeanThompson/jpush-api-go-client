@@ -1,4 +1,6 @@
-package jpush
+package push
+
+import "github.com/DeanThompson/jpush-api-go-client/common"
 
 // 应用内消息。或者称作：自定义消息，透传消息。
 // 此部分内容不会展示到通知栏上，JPush SDK 收到消息内容后透传给 App。
@@ -16,7 +18,7 @@ func NewMessage(content string) *Message {
 
 func (m *Message) Validate() error {
 	if m.Content == "" {
-		return ErrMessageContentMissing
+		return common.ErrMessageContentMissing
 	}
 
 	return nil

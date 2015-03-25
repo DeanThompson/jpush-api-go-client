@@ -1,4 +1,6 @@
-package jpush
+package push
+
+import "github.com/DeanThompson/jpush-api-go-client/common"
 
 type Platform struct {
 	value []string
@@ -23,7 +25,7 @@ func (p *Platform) All() {
 
 func (p *Platform) Add(platform string) error {
 	if !isValidPlatform(platform) {
-		return ErrInvalidPlatform
+		return common.ErrInvalidPlatform
 	}
 	if !p.Has(platform) {
 		if p.value == nil {

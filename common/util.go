@@ -1,4 +1,4 @@
-package jpush
+package common
 
 import (
 	"encoding/base64"
@@ -6,17 +6,17 @@ import (
 	"strconv"
 )
 
-func basicAuth(username, password string) string {
+func BasicAuth(username, password string) string {
 	auth := username + ":" + password
 	return base64.StdEncoding.EncodeToString([]byte(auth))
 }
 
-func getIntHeader(resp *http.Response, key string) (int, error) {
+func GetIntHeader(resp *http.Response, key string) (int, error) {
 	v := resp.Header.Get(key)
 	return strconv.Atoi(v)
 }
 
-func maxInt(a, b int) int {
+func MaxInt(a, b int) int {
 	if a >= b {
 		return a
 	}

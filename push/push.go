@@ -1,10 +1,16 @@
-package jpush
+package push
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/DeanThompson/jpush-api-go-client/common"
 )
+
+type Validator interface {
+	Validate() error
+}
 
 // 一个推送对象，表示一条推送相关的所有信息。
 type PushObject struct {
@@ -17,7 +23,7 @@ type PushObject struct {
 
 func (po *PushObject) Validate() error {
 	if po.notification == nil && po.message == nil {
-		return ErrContentMissing
+		return common.ErrContentMissing
 	}
 
 	for _, v := range []Validator{po.notification, po.message, po.options} {
@@ -107,9 +113,10 @@ func (pr *PushResult) FromResponse(resp *http.Response) error {
 	}
 
 	pr.StatusCode = resp.StatusCode
-	pr.RateLimitQuota, _ = getIntHeader(resp, rateLimitQuotaHeader)
-	pr.RateLimitRemaining, _ = getIntHeader(resp, rateLimitRemainingHeader)
-	pr.RateLimitReset, _ = getIntHeader(resp, rateLimitResetHeader)
+	pr.RateLimitQuota, _ = common.GetIntHeader(resp, rateLimitQuotaHeader)
+	pr.RateLimitRemaining, _ = common.GetIntHeader(resp, rateLimitRemainingHeader)
+	pr.RateLimitReset, _ = common.GetIntHeader(resp, rateLimitResetHeader)
+
 	return nil
 }
 
