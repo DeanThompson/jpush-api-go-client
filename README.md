@@ -1,6 +1,8 @@
 JPush API Go Client
 ====================
 
+[![GoDoc](https://godoc.org/github.com/DeanThompson/jpush-api-go-client?status.svg)](https://godoc.org/github.com/DeanThompson/jpush-api-go-client) [![Build Status](https://travis-ci.org/DeanThompson/jpush-api-go-client.svg?branch=master)](https://travis-ci.org/DeanThompson/jpush-api-go-client)
+
 # 概述
 
 这是 JPush REST API 的 Golang 版本封装开发包，**非官方实现**，只支持 v3 版本。
