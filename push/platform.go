@@ -10,9 +10,10 @@ func NewPlatform() *Platform {
 	return &Platform{}
 }
 
-// "all" or ["ios", "android"]
+// 如果有 "all"，只会返回字符串 "all"
+// 其他情况都是 []string{}，包含具体的平台参数
 func (p *Platform) Value() interface{} {
-	if p.Has(ALL) {
+	if p.has(ALL) {
 		return ALL
 	}
 
@@ -23,20 +24,33 @@ func (p *Platform) All() {
 	p.value = []string{ALL}
 }
 
-func (p *Platform) Add(platform string) error {
-	if !isValidPlatform(platform) {
-		return common.ErrInvalidPlatform
+// 添加 platform，可选传参： "all", "ios", "android", "winphone"
+func (p *Platform) Add(platforms ...string) error {
+	if len(platforms) == 0 {
+		return nil
 	}
-	if !p.Has(platform) {
-		if p.value == nil {
-			p.value = make([]string, 0)
+
+	if p.value == nil {
+		p.value = make([]string, 0)
+	}
+
+	// 去重
+	platforms = common.UniqString(platforms)
+
+	for _, platform := range platforms {
+		if !isValidPlatform(platform) {
+			return common.ErrInvalidPlatform
 		}
-		p.value = append(p.value, platform)
+
+		// 不要重复添加，如果有 set 就方便了
+		if !p.has(platform) {
+			p.value = append(p.value, platform)
+		}
 	}
 	return nil
 }
 
-func (p *Platform) Has(platform string) bool {
+func (p *Platform) has(platform string) bool {
 	if p.value == nil {
 		return false
 	}

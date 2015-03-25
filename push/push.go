@@ -2,6 +2,7 @@ package push
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -14,19 +15,23 @@ type Validator interface {
 
 // 一个推送对象，表示一条推送相关的所有信息。
 type PushObject struct {
-	platform     *Platform     `json:"platform"`
-	audience     *Audience     `json:"audience"`
-	notification *Notification `json:"notification"`
-	message      *Message      `json:"message"`
-	options      *Options      `json:"options"`
+	Platform     *Platform     `json:"platform"`
+	Audience     *Audience     `json:"audience"`
+	Notification *Notification `json:"notification"`
+	Message      *Message      `json:"message"`
+	Options      *Options      `json:"options"`
+}
+
+func NewPushObject() *PushObject {
+	return &PushObject{}
 }
 
 func (po *PushObject) Validate() error {
-	if po.notification == nil && po.message == nil {
+	if po.Notification == nil && po.Message == nil {
 		return common.ErrContentMissing
 	}
 
-	for _, v := range []Validator{po.notification, po.message, po.options} {
+	for _, v := range []Validator{po.Notification, po.Message, po.Options} {
 		if v != nil {
 			if err := v.Validate(); err != nil {
 				return err
@@ -37,6 +42,22 @@ func (po *PushObject) Validate() error {
 	return nil
 }
 
+// 实现 Marshaler interface
+func (po *PushObject) MarshalJSON() ([]byte, error) {
+	if err := po.Validate(); err != nil {
+		return nil, err
+	}
+
+	wrapper := pushObjectWrapper{
+		Platform:     po.Platform.Value(),
+		Audience:     po.Audience.Value(),
+		Notification: po.Notification,
+		Message:      po.Message,
+		Options:      po.Options,
+	}
+	return json.Marshal(wrapper)
+}
+
 type pushObjectWrapper struct {
 	Platform     interface{}   `json:"platform"`
 	Audience     interface{}   `json:"audience"`
@@ -45,25 +66,13 @@ type pushObjectWrapper struct {
 	Options      *Options      `json:"options,omitempty"`
 }
 
-// 实现 Marshaler interface
-func (po *PushObject) MarshalJSON() ([]byte, error) {
-	if err := po.Validate(); err != nil {
-		return nil, err
-	}
-
-	wrapper := pushObjectWrapper{
-		Platform:     po.platform.Value(),
-		Audience:     po.audience.Value(),
-		Notification: po.notification,
-		Message:      po.message,
-		Options:      po.options,
-	}
-	return json.Marshal(wrapper)
-}
-
 type PushError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
+}
+
+func (pe *PushError) String() string {
+	return fmt.Sprintf("{code: %d, message: %s}", pe.Code, pe.Message)
 }
 
 type PushResult struct {
@@ -75,22 +84,16 @@ type PushResult struct {
 	RateLimitRemaining int
 	RateLimitReset     int
 
-	// 成功时返回的 body
-	MsgId  string `json:"msg_id"`
-	SendNo string `json:"sendno"`
+	// 成功时 msg_id 是 string 类型。。。
+	// 失败时 msg_id 是 int 类型。。。
+	MsgId  interface{} `json:"msg_id"`
+	SendNo string      `json:"sendno"`
 
-	// 失败时返回的 body
-	Error PushError `json:"error"`
+	Error *PushError `json:"error"`
 }
 
-// 成功： {"sendno":"18","msg_id":"1828256757"}
-// 失败：
-//    {
-//        "error": {
-//            "code": 2002,
-//            "message": "Rate limit exceeded"
-//        }
-//    }
+// 成功： {"sendno":"18", "msg_id":"1828256757"}
+// 失败： {"msg_id": 1035959738, "error": {"message": "app_key does not exist", "code": 1008}}
 //
 // 所有的 HTTP API Response Header 里都加了三项频率控制信息：
 //
@@ -103,6 +106,8 @@ func (pr *PushResult) FromResponse(resp *http.Response) error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("\nresponse: ", string(data), "\n")
 
 	// 成功或失败时解析出返回的数据
 	// 实际上只有当 StatusCode = 200 时，才有 msg_id 和 sendno
@@ -144,4 +149,11 @@ func (pr *PushResult) ErrorMsg() string {
 		return pr.Error.Message
 	}
 	return ""
+}
+
+func (pr *PushResult) String() string {
+	f := "<PushResult> StatusCode: %d, msg_id: %v, sendno: %s, error: %v, " +
+		" rateLimitQuota: %d, rateLimitRemaining: %d, rateLimitReset: %d"
+	return fmt.Sprintf(f, pr.StatusCode, pr.MsgId, pr.SendNo, pr.Error,
+		pr.RateLimitQuota, pr.RateLimitRemaining, pr.RateLimitReset)
 }

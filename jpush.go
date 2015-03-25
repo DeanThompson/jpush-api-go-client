@@ -1,4 +1,4 @@
-package push
+package jpush
 
 import (
 	"github.com/DeanThompson/jpush-api-go-client/common"
@@ -15,7 +15,7 @@ type JPushClient struct {
 	http         *httplib.HTTPClient
 }
 
-func NewPushClient(appKey string, masterSecret string) *JPushClient {
+func NewJPushClient(appKey string, masterSecret string) *JPushClient {
 	client := JPushClient{
 		appKey:       appKey,
 		masterSecret: masterSecret,
@@ -31,17 +31,22 @@ func NewPushClient(appKey string, masterSecret string) *JPushClient {
 	return &client
 }
 
+// 设置调试模式，调试模式下，会输出日志
+func (jpc *JPushClient) SetDebug(debug bool) {
+	jpc.http.Debug(debug)
+}
+
 // 推送 API
 func (jpc *JPushClient) Push(payload *push.PushObject) (*push.PushResult, error) {
 	return jpc.doPush(common.PUSH_URL, payload)
 }
 
-// 推送校验 API
+// 推送校验 API， 只用于验证推送调用是否能够成功，与推送 API 的区别在于：不向用户发送任何消息。
 func (jpc *JPushClient) PushValidate(payload *push.PushObject) (*push.PushResult, error) {
 	return jpc.doPush(common.PUSH_VALIDATE_URL, payload)
 }
 
-func (jpc *JPushClient) doPush(url string, payload *JPushClient) (*push.PushResult, error) {
+func (jpc *JPushClient) doPush(url string, payload *push.PushObject) (*push.PushResult, error) {
 	resp, err := jpc.http.PostJson(url, payload, jpc.headers)
 	if err != nil {
 		return nil, err

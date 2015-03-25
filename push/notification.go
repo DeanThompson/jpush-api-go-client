@@ -8,10 +8,14 @@ import (
 
 // “通知”对象，是一条推送的实体内容对象之一（另一个是“消息”）
 type Notification struct {
-	Alert    string               `json:"alert"`
-	Android  AndroidNotification  `json:"android"`
-	Ios      IosNotification      `json:"ios"`
-	Winphone WinphoneNotification `json:"winphone"`
+	Alert    string                `json:"alert"`
+	Android  *AndroidNotification  `json:"android"`
+	Ios      *IosNotification      `json:"ios"`
+	Winphone *WinphoneNotification `json:"winphone"`
+}
+
+func NewNotification(alert string) *Notification {
+	return &Notification{Alert: alert}
 }
 
 func (n *Notification) Validate() error {
@@ -42,6 +46,12 @@ type AndroidNotification struct {
 	BuilderId int    `json:"builder_id,omitempty"`
 }
 
+func NewAndroidNotification(alert string) *AndroidNotification {
+	n := &AndroidNotification{}
+	n.Alert = alert
+	return n
+}
+
 // iOS 平台上 APNs 通知。
 type IosNotification struct {
 	platformNotification
@@ -50,6 +60,12 @@ type IosNotification struct {
 	Badge            int    `json:"badge,omitempty"`
 	ContentAvailable bool   `json:"content-available,omitempty"`
 	Category         string `json:"category,omitempty"`
+}
+
+func NewIosNotification(alert string) *IosNotification {
+	a := &IosNotification{}
+	a.Alert = alert
+	return a
 }
 
 // APNs 协议定义通知长度为 2048 字节。
@@ -74,4 +90,10 @@ type WinphoneNotification struct {
 
 	Title    string `json:"title,omitempty"`
 	OpenPage string `json:"_open_page,omitempty"`
+}
+
+func NewWinphoneNotification(alert string) *WinphoneNotification {
+	w := &WinphoneNotification{}
+	w.Alert = alert
+	return w
 }

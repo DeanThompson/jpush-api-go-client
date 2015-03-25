@@ -1,5 +1,7 @@
 package push
 
+import "github.com/DeanThompson/jpush-api-go-client/common"
+
 // 推送设备对象，表示一条推送可以被推送到哪些设备列表。
 // 确认推送设备对象，JPush 提供了多种方式，比如：别名、标签、注册ID、分群、广播等。
 type Audience struct {
@@ -43,5 +45,6 @@ func (a *Audience) set(key string, v []string) {
 	if a.value == nil {
 		a.value = make(map[string][]string)
 	}
-	a.value[key] = v
+
+	a.value[key] = common.UniqString(v)
 }

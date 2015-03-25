@@ -104,7 +104,8 @@ func (c *HTTPClient) PostJson(url string, data interface{}, headers map[string]s
 
 func (c *HTTPClient) log(v ...interface{}) {
 	if c.debug {
-		log.Println("[HTTPClient]", v...)
+		vs := []interface{}{"[HTTPClient]"}
+		log.Println(append(vs, v...)...)
 	}
 }
 
@@ -149,7 +150,7 @@ func formatUrl(base string, params map[string]interface{}) string {
 
 	queryString := mapToURLValues(params).Encode()
 
-	if strings.HasSuffix(base, "?") || strings.HasSuffix(url, "&") {
+	if strings.HasSuffix(base, "?") || strings.HasSuffix(base, "&") {
 		return base + queryString
 	}
 

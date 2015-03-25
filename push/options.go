@@ -11,15 +11,19 @@ type Options struct {
 	BigPushDuration int   `json:"big_push_duration,omitempty"`
 }
 
+func NewOptions() *Options {
+	return &Options{}
+}
+
 // 可选项的校验没有那么严格，目前而言并没有出错的情况
 // 只是针对某些值做一下范围限制
 func (self *Options) Validate() error {
 	if self.TimeToLive > 0 {
-		self.TimeToLive = common.MaxInt(self.TimeToLive, MaxTimeToLive)
+		self.TimeToLive = common.MinInt(self.TimeToLive, MaxTimeToLive)
 	}
 
 	if self.BigPushDuration > 0 {
-		self.BigPushDuration = common.MaxInt(self.BigPushDuration, MaxBigPushDuration)
+		self.BigPushDuration = common.MinInt(self.BigPushDuration, MaxBigPushDuration)
 	}
 	return nil
 }
