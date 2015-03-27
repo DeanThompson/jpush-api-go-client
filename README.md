@@ -29,7 +29,7 @@ const (
     masterSecret = ""
 )
 
-jclient := jpush.NewPushClient(appKey, masterSecret)
+jclient := jpush.NewJPushClient(appKey, masterSecret)
 ```
 
 ## 2. 逐步构建消息体

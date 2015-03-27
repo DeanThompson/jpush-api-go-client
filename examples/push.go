@@ -9,7 +9,7 @@ import (
 	"github.com/DeanThompson/jpush-api-go-client/push"
 )
 
-func main() {
+func push_example() {
 	const (
 		appKey       = "8b7127870ccae51a2c2e6da4"
 		masterSecret = "55df2bc707d65fb39ca01325"
@@ -99,3 +99,7 @@ func main() {
 		fmt.Println("\nPushValidate result:", result)
 	}
 }
+
+//func main() {
+//    push_example()
+//}
