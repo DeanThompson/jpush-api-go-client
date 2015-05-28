@@ -1,4 +1,4 @@
-package main
+package examples
 
 import (
 	"encoding/json"
@@ -99,7 +99,3 @@ func push_example() {
 		fmt.Println("\nPushValidate result:", result)
 	}
 }
-
-//func main() {
-//    push_example()
-//}

@@ -1,4 +1,4 @@
-package main
+package examples
 
 import (
 	"fmt"
@@ -35,7 +35,3 @@ func device_example() {
 		fmt.Println("\nUpdateDevice result:", updateResult)
 	}
 }
-
-//func main() {
-//    device_example()
-//}

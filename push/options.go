@@ -7,7 +7,7 @@ type Options struct {
 	SendNo          int   `json:"sendno,omitempty"`
 	TimeToLive      int   `json:"time_to_live,omitempty"`
 	OverrideMsgId   int64 `json:"override_msg_id,omitempty"`
-	ApnsProduction  bool  `json:"apns_production,omitempty"`
+	ApnsProduction  bool  `json:"apns_production"`
 	BigPushDuration int   `json:"big_push_duration,omitempty"`
 }
 
