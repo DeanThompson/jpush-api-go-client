@@ -2,12 +2,14 @@ package jpush
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/DeanThompson/jpush-api-go-client/common"
 	"github.com/DeanThompson/jpush-api-go-client/device"
 	"github.com/DeanThompson/jpush-api-go-client/httplib"
 	"github.com/DeanThompson/jpush-api-go-client/push"
+	"github.com/DeanThompson/jpush-api-go-client/report"
 )
 
 // JPush 的 Golang 推送客户端
@@ -141,6 +143,24 @@ func (jpc *JPushClient) DeleteAlias(alias string, platforms []string) (*common.R
 	params := addPlatformsToParams(platforms)
 	resp, err := jpc.http.Delete(url, params, jpc.headers)
 	return common.ResponseOrError(resp, err)
+}
+
+// 送达统计
+func (jpc *JPushClient) GetReceivedReport(msgIds []uint64) (*report.ReceiveReport, error) {
+	ids := make([]string, 0, len(msgIds))
+	for _, msgId := range msgIds {
+		ids = append(ids, strconv.FormatUint(msgId, 10))
+	}
+	params := map[string]interface{}{"msg_ids": strings.Join(ids, ",")}
+
+	resp, err := jpc.http.Get(common.RECEIVED_REPORT_URL, params, jpc.headers)
+	if err != nil {
+		return nil, err
+	}
+
+	result := &report.ReceiveReport{}
+	err = result.FromResponse(resp)
+	return result, err
 }
 
 ////////////////////////////////////////////////////////////////////////////////

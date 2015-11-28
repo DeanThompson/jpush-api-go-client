@@ -174,17 +174,27 @@ func test_DeleteAlias(t *testing.T) {
 	showResultOrError("DeleteAlias", result, err)
 }
 
+///////////////////// Report /////////////////////
+
+func test_GetReceivedReport(t *testing.T) {
+	msgIds := []uint64{1613113584, 1229760629}
+	result, err := client.GetReceivedReport(msgIds)
+	showResultOrError("GetReceivedReport", result, err)
+}
+
 func Test_Starter(t *testing.T) {
-	//	test_Push(t)
-	//
-	//	test_QueryDevice(t)
-	//	test_UpdateDevice(t)
-	//
-	//	test_GetTags(t)
-	//	test_CheckTagUserExists(t)
-	//	test_UpdateTagUsers(t)
-	//	test_DeleteTag(t)
+	test_Push(t)
+
+	test_QueryDevice(t)
+	test_UpdateDevice(t)
+
+	test_GetTags(t)
+	test_CheckTagUserExists(t)
+	test_UpdateTagUsers(t)
+	test_DeleteTag(t)
 
 	test_GetAliasUsers(t)
 	test_DeleteAlias(t)
+
+	test_GetReceivedReport(t)
 }

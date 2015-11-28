@@ -46,12 +46,6 @@ func (result *CheckTagUserExistsResult) String() string {
 }
 
 // 更新标签（与设备的绑定的关系）请求参数
-const (
-	actionAdd                     = "add"
-	actionRemove                  = "remove"
-	maxAddOrRemoveRegistrationIds = 1000
-)
-
 type UpdateTagUsersArgs struct {
 	RegistrationIds map[string][]string `json:"registration_ids"`
 }

@@ -23,5 +23,5 @@ func (result *GetAliasUsersResult) FromResponse(resp *http.Response) error {
 
 func (result *GetAliasUsersResult) String() string {
 	return fmt.Sprintf("<GetAliasUsersResult> RegistrationIds: %v, %v",
-		result.RegistrationIds, result.ResponseBase)
+		result.RegistrationIds, result.ResponseBase.String())
 }

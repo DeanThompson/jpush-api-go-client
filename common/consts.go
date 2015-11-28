@@ -9,6 +9,7 @@ const (
 
 	push_host   = "https://api.jpush.cn"
 	device_host = "https://device.jpush.cn"
+	report_host = "https://report.jpush.cn"
 
 	PUSH_URL          = push_host + "/v3/push"
 	PUSH_VALIDATE_URL = push_host + "/v3/push/validate"
@@ -28,6 +29,9 @@ const (
 	QUERY_ALIAS_URL = device_host + "/v3/aliases/%s"
 	// DELETE /v3/aliases/{alias_value}
 	DELETE_ALIAS_URL = device_host + "/v3/aliases/%s"
+
+	// GET /v3/received
+	RECEIVED_REPORT_URL = report_host + "/v3/received"
 )
 
 var (
