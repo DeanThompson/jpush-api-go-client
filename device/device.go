@@ -8,28 +8,24 @@ import (
 	"github.com/DeanThompson/jpush-api-go-client/common"
 )
 
-// 设备的所有属性，包含tags, alias
-type DeviceInfo struct {
+type QueryDeviceResult struct {
+	common.ResponseBase
+
+	// 设备的所有属性，包含tags, alias
 	Tags  []string `json:"tags"`
 	Alias string   `json:"alias"`
 }
 
-type DeviceInfoResult struct {
-	common.ResponseBase
-	DeviceInfo
-}
-
-func (dir *DeviceInfoResult) FromResponse(resp *http.Response) error {
-	err := common.RespToJson(resp, &dir)
-	if err != nil {
-		return err
-	}
+func (dir *QueryDeviceResult) FromResponse(resp *http.Response) error {
 	dir.ResponseBase = common.NewResponseBase(resp)
-	return nil
+	if !dir.Ok() {
+		return nil
+	}
+	return common.RespToJson(resp, &dir)
 }
 
-func (dir *DeviceInfoResult) String() string {
-	return fmt.Sprintf("<DeviceInfoResult> tags: %v, alias: %s, %v",
+func (dir *QueryDeviceResult) String() string {
+	return fmt.Sprintf("<QueryDeviceResult> tags: %v, alias: \"%s\", %v",
 		dir.Tags, dir.Alias, dir.ResponseBase.String())
 }
 
@@ -49,11 +45,15 @@ type DeviceUpdate struct {
 
 	// 更新设备的别名属性；当别名为空串时，删除指定设备的别名；
 	Alias string
+
+	// 手机号码
+	Mobile string
 }
 
 type deviceUpdateWrapper struct {
-	Tags  interface{} `json:"tags"`
-	Alias string      `json:"alias"`
+	Tags   interface{} `json:"tags"`
+	Alias  string      `json:"alias"`
+	Mobile string      `json:"mobile"`
 }
 
 func NewDeviceUpdate() *DeviceUpdate {
@@ -70,6 +70,7 @@ func (du *DeviceUpdate) MarshalJSON() ([]byte, error) {
 		wrapper.Tags = du.Tags
 	}
 	wrapper.Alias = du.Alias
+	wrapper.Mobile = du.Mobile
 	return json.Marshal(wrapper)
 }
 
@@ -91,4 +92,8 @@ func (du *DeviceUpdate) ClearAllTags() {
 
 func (du *DeviceUpdate) SetAlias(alias string) {
 	du.Alias = alias
+}
+
+func (du *DeviceUpdate) SetMobile(mobile string) {
+	du.Mobile = mobile
 }

@@ -11,7 +11,7 @@ type ErrorResult struct {
 }
 
 func (pe *ErrorResult) String() string {
-	return fmt.Sprintf("{code: %d, message: %s}", pe.Code, pe.Message)
+	return fmt.Sprintf("{code: %d, message: \"%s\"}", pe.Code, pe.Message)
 }
 
 type RateLimitInfo struct {
@@ -50,10 +50,26 @@ type ResponseBase struct {
 }
 
 func NewResponseBase(resp *http.Response) ResponseBase {
-	return ResponseBase{
+	rb := ResponseBase{
 		StatusCode:    resp.StatusCode,
 		RateLimitInfo: NewRateLimitInfo(resp),
 	}
+	if !rb.Ok() {
+		RespToJson(resp, &rb)
+	}
+	return rb
+}
+
+// 根据请求返回的 HTTP 状态码判断推送是否成功
+// 规范：
+// - 200 一定是正确。所有异常都不使用 200 返回码
+// - 业务逻辑上的错误，有特别的错误码尽量使用 4xx，否则使用 400。
+// - 服务器端内部错误，无特别错误码使用 500。
+// - 业务异常时，返回内容使用 JSON 格式定义 error 信息。
+//
+// 更多细节： http://docs.jpush.io/server/http_status_code/
+func (rb *ResponseBase) Ok() bool {
+	return rb.StatusCode == http.StatusOK
 }
 
 func (rb *ResponseBase) String() string {

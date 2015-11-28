@@ -185,6 +185,6 @@ if err != nil {
 }
 ```
 
-## 4. 完整示例
+## 4. 更多示例
 
-完整的示例可以直接运行，代码在这里：[examples/push.go](examples/push.go)
+更多例子可以看这里：[jpush_test.go](jpush_test.go)

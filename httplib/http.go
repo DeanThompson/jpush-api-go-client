@@ -16,8 +16,12 @@ import (
 
 // HTTP methods we support
 const (
-	GET  = "GET"
-	POST = "POST"
+	GET    = "GET"
+	POST   = "POST"
+	DELETE = "DELETE"
+
+//	PUT    = "PUT"
+//	HEAD   = "HEAD"
 )
 
 type HTTPClient struct {
@@ -36,7 +40,7 @@ func NewClient() *HTTPClient {
 	return c
 }
 
-func (c *HTTPClient) Debug(debug bool) *HTTPClient {
+func (c *HTTPClient) SetDebug(debug bool) *HTTPClient {
 	c.debug = debug
 	return c
 }
@@ -74,14 +78,20 @@ func (c *HTTPClient) do(method string, url string, headers map[string]string, bo
 }
 
 func (c *HTTPClient) Get(url string, params map[string]interface{}, headers map[string]string) (*http.Response, error) {
-	c.log(GET, url, params, headers)
-
-	return c.do(GET, formatUrl(url, params), headers, nil)
+	url = formatUrl(url, params)
+	c.log(GET, url, headers)
+	return c.do(GET, url, headers, nil)
 }
 
 func (c *HTTPClient) Post(url string, bodyType string, body io.Reader, headers map[string]string) (*http.Response, error) {
-	headers["Content-Type"] = bodyType
-	return c.do(POST, url, headers, body)
+	// DON'T modify headers passed-in
+	new_headers := make(map[string]string, len(headers))
+	for k, v := range headers {
+		new_headers[k] = v
+	}
+	new_headers["Content-Type"] = bodyType
+
+	return c.do(POST, url, new_headers, body)
 }
 
 func (c *HTTPClient) PostForm(url string, data map[string]interface{}, headers map[string]string) (*http.Response, error) {
@@ -100,6 +110,12 @@ func (c *HTTPClient) PostJson(url string, data interface{}, headers map[string]s
 	c.log(POST, url, string(payload), headers)
 
 	return c.Post(url, "application/json", bytes.NewReader(payload), headers)
+}
+
+func (c *HTTPClient) Delete(url string, params map[string]interface{}, headers map[string]string) (*http.Response, error) {
+	url = formatUrl(url, params)
+	c.log(DELETE, url, headers)
+	return c.do(DELETE, url, headers, nil)
 }
 
 func (c *HTTPClient) log(v ...interface{}) {

@@ -11,7 +11,7 @@ import (
 
 func BasicAuth(username, password string) string {
 	auth := username + ":" + password
-	return base64.StdEncoding.EncodeToString([]byte(auth))
+	return "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 }
 
 func RespToJson(resp *http.Response, dest interface{}) error {
@@ -20,8 +20,16 @@ func RespToJson(resp *http.Response, dest interface{}) error {
 	if err != nil {
 		return err
 	}
-
+	println(string(body))
 	return json.Unmarshal(body, &dest)
+}
+
+func ResponseOrError(resp *http.Response, err error) (*ResponseBase, error) {
+	if err != nil {
+		return nil, err
+	}
+	ret := NewResponseBase(resp)
+	return &ret, nil
 }
 
 func GetIntHeader(resp *http.Response, key string) (int, error) {
