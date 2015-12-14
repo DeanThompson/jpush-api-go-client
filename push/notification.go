@@ -8,10 +8,10 @@ import (
 
 // “通知”对象，是一条推送的实体内容对象之一（另一个是“消息”）
 type Notification struct {
-	Alert    string                `json:"alert"`
-	Android  *AndroidNotification  `json:"android"`
-	Ios      *IosNotification      `json:"ios"`
-	Winphone *WinphoneNotification `json:"winphone"`
+	Alert    string                `json:"alert,omitempty"`
+	Android  *AndroidNotification  `json:"android,omitempty"`
+	Ios      *IosNotification      `json:"ios,omitempty"`
+	Winphone *WinphoneNotification `json:"winphone,omitempty"`
 }
 
 func NewNotification(alert string) *Notification {
