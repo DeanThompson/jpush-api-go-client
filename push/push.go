@@ -30,11 +30,21 @@ func (po *PushObject) Validate() error {
 		return common.ErrContentMissing
 	}
 
-	for _, v := range []Validator{po.Notification, po.Message, po.Options} {
-		if v != nil {
-			if err := v.Validate(); err != nil {
-				return err
-			}
+	if po.Notification != nil {
+		if err := po.Notification.Validate(); err != nil {
+			return err
+		}
+	}
+
+	if po.Message != nil {
+		if err := po.Message.Validate(); err != nil {
+			return err
+		}
+	}
+
+	if po.Options != nil {
+		if err := po.Options.Validate(); err != nil {
+			return err
 		}
 	}
 
