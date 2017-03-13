@@ -20,7 +20,7 @@ func RespToJson(resp *http.Response, dest interface{}) error {
 	if err != nil {
 		return err
 	}
-	println(string(body))
+	//println(string(body))
 	return json.Unmarshal(body, &dest)
 }
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/DeanThompson/jpush-api-go-client/common"
+	"github.com/Aqiling/jpush-api-go-client/common"
 )
 
 // 查询标签列表请求结果

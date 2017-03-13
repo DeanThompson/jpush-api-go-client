@@ -1,7 +1,7 @@
 JPush API Go Client
 ====================
 
-[![GoDoc](https://godoc.org/github.com/DeanThompson/jpush-api-go-client?status.svg)](https://godoc.org/github.com/DeanThompson/jpush-api-go-client) [![Build Status](https://travis-ci.org/DeanThompson/jpush-api-go-client.svg?branch=master)](https://travis-ci.org/DeanThompson/jpush-api-go-client)
+[![GoDoc](https://godoc.org/github.com/Aqiling/jpush-api-go-client?status.svg)](https://godoc.org/github.com/Aqiling/jpush-api-go-client) [![Build Status](https://travis-ci.org/Aqiling/jpush-api-go-client.svg?branch=master)](https://travis-ci.org/Aqiling/jpush-api-go-client)
 
 # 概述
 
@@ -14,7 +14,7 @@ JPush API Go Client
 使用 go get 安装，无任何第三方依赖：
 
 ```sh
-go get github.com/DeanThompson/jpush-api-go-client
+go get github.com/Aqiling/jpush-api-go-client
 ```
 
 # 使用方法
@@ -22,7 +22,7 @@ go get github.com/DeanThompson/jpush-api-go-client
 ## 1. 创建 JPushClient
 
 ```go
-import "github.com/DeanThompson/jpush-api-go-client"
+import "github.com/Aqiling/jpush-api-go-client"
 
 const (
     appKey = ""
@@ -37,7 +37,7 @@ jclient := jpush.NewJPushClient(appKey, masterSecret)
 与推送有关的数据结构都在 push 包里
 
 ```go
-import "github.com/DeanThompson/jpush-api-go-client/push"
+import "github.com/Aqiling/jpush-api-go-client/push"
 ```
 
 ### 2.1 创建 Platform 对象
@@ -186,5 +186,6 @@ if err != nil {
 ```
 
 ## 4. 更多示例
+
 
 更多例子可以看这里：[jpush_test.go](jpush_test.go)

@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
-	"github.com/DeanThompson/jpush-api-go-client/common"
+	"github.com/Aqiling/jpush-api-go-client/common"
 )
 
 type Validator interface {
@@ -88,6 +89,9 @@ type PushResult struct {
 // 失败： {"msg_id": 1035959738, "error": {"message": "app_key does not exist", "code": 1008}}
 func (pr *PushResult) FromResponse(resp *http.Response) error {
 	pr.ResponseBase = common.NewResponseBase(resp)
+	if pr.ResponseBase.MsgId != nil {
+		pr.MsgId = strconv.FormatFloat(pr.ResponseBase.MsgId.(float64), 'g', 64, 64)
+	}
 	if !pr.Ok() {
 		return nil
 	}

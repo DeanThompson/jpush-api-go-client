@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/DeanThompson/jpush-api-go-client/common"
+	"github.com/Aqiling/jpush-api-go-client/common"
 )
 
 type GetAliasUsersResult struct {
