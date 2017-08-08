@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"fmt"
 )
 
 // HTTP methods we support
@@ -103,6 +104,7 @@ func (c *HTTPClient) PostForm(url string, data map[string]interface{}, headers m
 
 func (c *HTTPClient) PostJson(url string, data interface{}, headers map[string]string) (*http.Response, error) {
 	payload, err := json.Marshal(data)
+	fmt.Println(string(payload))
 	if err != nil {
 		return nil, err
 	}
