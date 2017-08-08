@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Aqiling/jpush-api-go-client/device"
-	"github.com/Aqiling/jpush-api-go-client/push"
+	"github.com/jukylin/jpush-api-go-client/device"
+	"github.com/jukylin/jpush-api-go-client/push"
 )
 
 const (

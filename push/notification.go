@@ -3,7 +3,7 @@ package push
 import (
 	"encoding/json"
 
-	"github.com/Aqiling/jpush-api-go-client/common"
+	"github.com/jukylin/jpush-api-go-client/common"
 )
 
 // “通知”对象，是一条推送的实体内容对象之一（另一个是“消息”）
