@@ -12,7 +12,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"fmt"
 )
 
 // HTTP methods we support
