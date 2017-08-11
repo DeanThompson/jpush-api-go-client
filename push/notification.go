@@ -64,7 +64,7 @@ type IosNotification struct {
 	Badge            int    `json:"badge,omitempty"`
 	ContentAvailable bool   `json:"content-available,omitempty"`
 	Category         string `json:"category,omitempty"`
-	MutableContent   bool `json:"mutable_content,omitempty"`
+	MutableContent   bool `json:"mutable-content,omitempty"`
 }
 
 func NewIosNotification(alert string) *IosNotification {
