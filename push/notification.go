@@ -27,7 +27,7 @@ func (n *Notification) Validate() error {
 
 // 平台通用的通知属性
 type platformNotification struct {
-	Alert  string                 `json:"alert"` // required
+	Alert  interface{}  `json:"alert"` // required
 	Extras map[string]interface{} `json:"extras,omitempty"`
 }
 
@@ -67,7 +67,7 @@ type IosNotification struct {
 	MutableContent   bool `json:"mutable-content,omitempty"`
 }
 
-func NewIosNotification(alert string) *IosNotification {
+func NewIosNotification(alert map[string]string) *IosNotification {
 	a := &IosNotification{}
 	a.Alert = alert
 	return a
