@@ -3,7 +3,7 @@ package push
 import (
 	"encoding/json"
 
-	"github.com/DeanThompson/jpush-api-go-client/common"
+	"github.com/jukylin/jpush-api-go-client/common"
 )
 
 // “通知”对象，是一条推送的实体内容对象之一（另一个是“消息”）
@@ -27,7 +27,7 @@ func (n *Notification) Validate() error {
 
 // 平台通用的通知属性
 type platformNotification struct {
-	Alert  string                 `json:"alert"` // required
+	Alert  interface{}  `json:"alert"` // required
 	Extras map[string]interface{} `json:"extras,omitempty"`
 }
 
@@ -44,6 +44,10 @@ type AndroidNotification struct {
 
 	Title     string `json:"title,omitempty"`
 	BuilderId int    `json:"builder_id,omitempty"`
+	Style int    `json:"style,omitempty"`
+	BigText string    `json:"big_text,omitempty"`
+	Inbox string    `json:"inbox,omitempty"`
+	BigPicPath string    `json:"big_pic_path,omitempty"`
 }
 
 func NewAndroidNotification(alert string) *AndroidNotification {
@@ -60,9 +64,10 @@ type IosNotification struct {
 	Badge            int    `json:"badge,omitempty"`
 	ContentAvailable bool   `json:"content-available,omitempty"`
 	Category         string `json:"category,omitempty"`
+	MutableContent   bool `json:"mutable-content,omitempty"`
 }
 
-func NewIosNotification(alert string) *IosNotification {
+func NewIosNotification(alert map[string]string) *IosNotification {
 	a := &IosNotification{}
 	a.Alert = alert
 	return a

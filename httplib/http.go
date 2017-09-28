@@ -103,6 +103,7 @@ func (c *HTTPClient) PostForm(url string, data map[string]interface{}, headers m
 
 func (c *HTTPClient) PostJson(url string, data interface{}, headers map[string]string) (*http.Response, error) {
 	payload, err := json.Marshal(data)
+
 	if err != nil {
 		return nil, err
 	}

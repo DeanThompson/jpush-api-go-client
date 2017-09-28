@@ -1,6 +1,6 @@
 package push
 
-import "github.com/DeanThompson/jpush-api-go-client/common"
+import "github.com/jukylin/jpush-api-go-client/common"
 
 // 推送设备对象，表示一条推送可以被推送到哪些设备列表。
 // 确认推送设备对象，JPush 提供了多种方式，比如：别名、标签、注册ID、分群、广播等。

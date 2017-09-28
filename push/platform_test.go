@@ -3,7 +3,7 @@ package push
 import (
 	"testing"
 
-	"github.com/DeanThompson/jpush-api-go-client/common"
+	"github.com/jukylin/jpush-api-go-client/common"
 )
 
 func Test_has(t *testing.T) {

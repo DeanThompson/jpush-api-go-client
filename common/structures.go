@@ -45,6 +45,8 @@ type ResponseBase struct {
 	// 频率限制相关
 	RateLimitInfo *RateLimitInfo
 
+	MsgId interface{} `json:"msg_id"`
+
 	// 错误相关
 	Error *ErrorResult `json:"error"`
 }

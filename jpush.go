@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/DeanThompson/jpush-api-go-client/common"
-	"github.com/DeanThompson/jpush-api-go-client/device"
-	"github.com/DeanThompson/jpush-api-go-client/httplib"
-	"github.com/DeanThompson/jpush-api-go-client/push"
-	"github.com/DeanThompson/jpush-api-go-client/report"
+	"github.com/jukylin/jpush-api-go-client/common"
+	"github.com/jukylin/jpush-api-go-client/device"
+	"github.com/jukylin/jpush-api-go-client/httplib"
+	"github.com/jukylin/jpush-api-go-client/push"
+	"github.com/jukylin/jpush-api-go-client/report"
 )
 
 // JPush 的 Golang 推送客户端
